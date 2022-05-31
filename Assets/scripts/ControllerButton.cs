@@ -9,9 +9,18 @@ public class ControllerButton : MonoBehaviour
     public Button btnClick;
 
     public GameObject popUp;
-    // Start is called before the first frame update
+    
+    private int coinQuantity;
+    private int gemQuantity;
+    
+    public Text coin;
+    public Text gem;
+    public Slider coinSlider;
+    public Slider gemSlider;
+    
     void Start()
     {
+
         if (btnClick != null)
         {
             btnClick = GetComponent<Button>();
@@ -22,17 +31,18 @@ public class ControllerButton : MonoBehaviour
 
     private void ButtonAnimation()
     {
-        if (btnClick.IsActive())
-        {
-            
-            popUp.SetActive(true);
-            Sequence sequence = DOTween.Sequence();
+        coinQuantity = Random.Range(1000, 6000);
+        gemQuantity = Random.Range(20, 100);
+        Sequence sequence = DOTween.Sequence();
 
-            sequence.Append(popUp.transform.DOScale(Vector3.one, 1f));
-        }
-        else
+        sequence.Append(popUp.transform.DOScale(Vector3.one, 1f));
+        sequence.AppendCallback(() =>
         {
-            transform.DOPunchRotation(new Vector3(360 , 0 ,0) , 1f);
-        }
+            coin.DOText(coinQuantity.ToString(), 3f, false, ScrambleMode.Numerals, "0123456789").From("0");
+            coinSlider.DOValue(coinQuantity, 1f);
+
+            gem.DOText(gemQuantity.ToString(), 3f, false, ScrambleMode.Numerals, "0123456789").From("0");
+            gemSlider.DOValue(gemQuantity, 2f);  
+        });
     }
 }
